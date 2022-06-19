@@ -1,0 +1,67 @@
+﻿@model Authorization.ModelViews.DetailedMovieMV
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@{
+    ViewData["Title"] = "Details";
+}
+@{
+    var isAuthorized = SignInManager.IsSignedIn(User);
+    var isAdmin = isAuthorized && UserManager.GetRolesAsync(UserManager.FindByNameAsync(User.Identity?.Name).Result)?.Result?[0] == "Admin";
+}
+
+<h1>@Model.MovieTitle</h1>
+
+<p>
+    @Model.MovieDescription
+</p>
+<p>
+    Rating: @Model.AvarageUserScore
+</p>
+<p>
+    @if (Model.Reviews.Where(x => UserManager.FindByIdAsync(x.UserId).Result.UserName.Equals(User.Identity?.Name)).ToList().Count == 0)
+    {
+        <a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">New Review</a>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Review
+            </th>
+            <th>
+                Rating
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Reviews) {
+        <tr>
+            <td>
+                @item.UserName
+            </td>
+            <td>
+                @item.Content
+            </td>
+            <td>
+                @item.Rating
+            </td>
+            <td>
+                @if (isAdmin || (isAuthorized && item.UserName == User.Identity?.Name))
+                {
+                    <Form>
+                        <a asp-action="Edit" asp-controller="Review" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Delete" asp-controller="Review" asp-route-id="@item.Id">Delete</a>
+                    </Form>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Authorization.ModelViews.MovieMV>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@{
+    var isAdmin = SignInManager.IsSignedIn(User) && UserManager.GetRolesAsync(UserManager.FindByNameAsync(User.Identity?.Name).Result)?.Result?[0] == "Admin";
+}
+
+<h1>Movies</h1>
+
+<p>
+    @if (isAdmin)
+    {
+        <a asp-action="Create">Create New</a>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th width = 70%>
+                Title
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                <form>
+                    <a asp-action="Details" asp-route-id="@item.Id">More</a>
+                    @if (isAdmin)
+                    {
+                        <form>
+                            |
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <form method="post">
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </form>
+                        </form>
+                    }
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
