@@ -49,7 +49,7 @@ namespace Authorization.Controllers
             IdentityUser user = _userManager.FindByNameAsync(User.Identity?.Name).Result;
             bool isAdmin = _userManager.GetRolesAsync(user)?.Result?[0] == "Admin";
 
-            if (!isAdmin || User.Identity?.Name != user.UserName)
+            if (!isAdmin && User.Identity?.Name != user.UserName)
                 return NotFound();
 
             var reviewMV = new ModifyReviewMV() {

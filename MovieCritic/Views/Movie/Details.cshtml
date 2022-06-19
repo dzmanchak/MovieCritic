@@ -13,6 +13,9 @@
 
 <h1>@Model.MovieTitle</h1>
 
+<h4>
+    @Model.Genre
+</h4>
 <p>
     @Model.MovieDescription
 </p>
@@ -20,7 +23,7 @@
     Rating: @Model.AvarageUserScore
 </p>
 <p>
-    @if (Model.Reviews.Where(x => UserManager.FindByIdAsync(x.UserId).Result.UserName.Equals(User.Identity?.Name)).ToList().Count == 0)
+    @if (isAuthorized && Model.Reviews.Where(x => UserManager.FindByIdAsync(x.UserId).Result.UserName.Equals(User.Identity?.Name)).ToList().Count == 0)
     {
         <a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">New Review</a>
     }

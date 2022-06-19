@@ -126,7 +126,7 @@ namespace Authorization.Managers
 
             foreach (var movie in movies)
             {
-                result.Add(new MovieMV() { Id = movie.Id, Title = movie.MovieTitle });
+                result.Add(new MovieMV() { Id = movie.Id, Title = movie.MovieTitle, Genre = _db.Genres.SingleOrDefault(x => x.Id == movie.GenreId).GenreName });
             }
 
             return result;

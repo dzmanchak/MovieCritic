@@ -22,8 +22,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th width = 70%>
+            <th width = 50%>
                 Title
+            </th>
+            <th width = 20%>
+                Genre
             </th>
             <th></th>
         </tr>
@@ -33,6 +36,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
             </td>
             <td>
                 <form>
